@@ -6,12 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ra.dto.request.ProductRequest;
 import ra.dto.response.ProductResponse;
+import ra.exception.ProductExceptionValidate;
 import ra.service.ProductService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/product")
+@CrossOrigin("*")
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -20,20 +23,26 @@ public class ProductController {
         return new ResponseEntity<>(productService.findAll(),HttpStatus.OK);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findById(@PathVariable String id){
+    public ResponseEntity<ProductResponse> findById(@PathVariable Long id){
         return new ResponseEntity<>(productService.findById(id),HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<ProductResponse> doAdd(@ModelAttribute ProductRequest productRequest){
+    public ResponseEntity<ProductResponse> doAdd(@Valid @ModelAttribute ProductRequest productRequest) throws ProductExceptionValidate {
+        if(productService.existByProductName(productRequest.getName())){
+            throw new ProductExceptionValidate("Tên sản phẩm đã tồn tại");
+        }
         return new ResponseEntity<>(productService.save(productRequest),HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> doUpdate(@ModelAttribute ProductRequest productRequest,@PathVariable String id){
-        productRequest.setId(id);
+    public ResponseEntity<ProductResponse> doUpdate(@Valid @ModelAttribute ProductRequest productRequest,@PathVariable String id) throws ProductExceptionValidate {
+        if(productService.existByProductName(productRequest.getName())){
+            throw new ProductExceptionValidate("Tên sản phẩm đã tồn tại");
+        }
+        productRequest.setId(Long.valueOf(id));
         return new ResponseEntity<>(productService.save(productRequest),HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<ProductResponse> delete(@PathVariable String id){
+    public ResponseEntity<ProductResponse> delete(@PathVariable Long id){
         productService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -27,7 +27,7 @@ public class ProductService {
                 .imageUrl(uploadService.getUrlFromFilename(p.getImageUrl()))
                 .build()).collect(Collectors.toList());
     }
-    public ProductResponse findById(String id){
+    public ProductResponse findById(Long id){
         Optional<Product> optionalProduct = productRepository.findById(id);
         return optionalProduct.map(product -> ProductResponse.builder()
                 .id(product.getId())
@@ -68,7 +68,7 @@ public class ProductService {
                 // up load file
                 fileName = uploadService.uploadFile(productRequest.getFile());
                 // xóa file cũ
-                uploadService.deleteFile(oldProduct.getImageUrl());
+//                uploadService.deleteFile(oldProduct.getImageUrl());
 
             }
             product = Product.builder()
@@ -89,9 +89,12 @@ public class ProductService {
                 .status(p.isStatus())
                 .imageUrl(uploadService.getUrlFromFilename(p.getImageUrl())).build();
     }
-    public void delete(String id){
+    public void delete(Long id){
         // xóa ảnh
-        uploadService.deleteFile(findById(id).getImageUrl());
+//        uploadService.deleteFile(findById(id).getImageUrl());
         productRepository.deleteById(id);
+    }
+    public boolean existByProductName(String name){
+       return productRepository.existsByName(name);
     }
 }

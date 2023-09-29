@@ -1,10 +1,7 @@
 package ra.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +51,7 @@ public class UploadService {
 
 
     public String deleteFile(String fileName) {
-        s3Client.deleteObject(bucketName, fileName);
+        s3Client.deleteObject(new DeleteObjectRequest(bucketName,fileName));
         return fileName + " removed ...";
     }
 

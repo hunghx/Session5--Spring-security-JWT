@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Builder
 public class ProductResponse {
-    private String id;
+    private Long id;
     private String name;
     private double price;
     private String description;
