@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ra.dto.request.ProductRequest;
 import ra.dto.response.ProductResponse;
 import ra.exception.ProductExceptionValidate;
-import ra.service.ProductService;
+import ra.service.impl.ProductService;
 
 import javax.validation.Valid;
 import java.util.List;
