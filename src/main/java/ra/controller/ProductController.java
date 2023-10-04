@@ -3,6 +3,7 @@ package ra.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ra.dto.request.ProductRequest;
 import ra.dto.response.ProductResponse;
@@ -18,10 +19,12 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAll(){
         return new ResponseEntity<>(productService.findAll(),HttpStatus.OK);
     }
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findById(@PathVariable Long id){
         return new ResponseEntity<>(productService.findById(id),HttpStatus.OK);

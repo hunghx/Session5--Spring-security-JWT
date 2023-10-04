@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,6 +20,7 @@ import ra.security.user_principal.UserDetailService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)// cho phép phân quyền trên các phương thức của controller
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -46,7 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/v1/public/**").permitAll() // không cần xác thực
-                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
+//                .antMatchers("/api/v1/admin/**").hasAnyRole("ADMIN","USER")
+//                .antMatchers("/api/v1/admin/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN","ROLE_PM")
                 .anyRequest().authenticated() // phải xác thực
                 .and()
                 .sessionManagement()
