@@ -94,6 +94,9 @@ public class ProductService {
 //        uploadService.deleteFile(findById(id).getImageUrl());
         productRepository.deleteById(id);
     }
+    public double getAvgProductPrice(){
+        return productRepository.getAvgProductPrice();
+    }
     public boolean existByProductName(String name){
        return productRepository.existsByName(name);
     }

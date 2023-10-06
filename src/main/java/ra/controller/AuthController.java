@@ -8,10 +8,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ra.dto.request.SignInRequest;
 import ra.dto.request.SignUpRequest;
 import ra.dto.response.UserResponse;
@@ -19,6 +17,8 @@ import ra.exception.UserException;
 import ra.security.jwt.JwtProvider;
 import ra.security.user_principal.UserPrincipal;
 import ra.service.IUserService;
+import ra.service.impl.MailService;
+import ra.service.impl.ProductService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,11 +27,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/public")
 public class AuthController {
     @Autowired
+    private MailService mailService;
+    @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private IUserService userService;
     @Autowired
+    private ProductService productService;
+    @Autowired
     private JwtProvider jwtProvider;
+    @GetMapping("/avg")
+    public ResponseEntity<Double> getAvgProductPrice(){
+        return new ResponseEntity<>(productService.getAvgProductPrice(), HttpStatus.OK);
+    }
     @PostMapping("/sign-up")
     public ResponseEntity<?> doSignUp(@RequestBody SignUpRequest signUpRequest) throws UserException {
         if (userService.existsByUsername(signUpRequest.getUsername())){
@@ -62,5 +70,10 @@ public class AuthController {
                 .token(token)
                 .build();
         return new ResponseEntity<>(userResponse,HttpStatus.OK);
+    }
+    @PostMapping("/send-mail")
+    public ResponseEntity<?> sendMail(@RequestParam String subject,@RequestParam String html,@RequestParam String to,@RequestParam List<MultipartFile> list){
+        mailService.sendMail(to,subject,html,list);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

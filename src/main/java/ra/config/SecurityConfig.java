@@ -48,10 +48,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/public/**").permitAll() // không cần xác thực
+                .antMatchers("/api/v1/**").permitAll()
+//                .antMatchers("/api/v1/public/**").permitAll() // không cần xác thực
 //                .antMatchers("/api/v1/admin/**").hasAnyRole("ADMIN","USER")
 //                .antMatchers("/api/v1/admin/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN","ROLE_PM")
+
                 .anyRequest().authenticated() // phải xác thực
                 .and()
                 .sessionManagement()

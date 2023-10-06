@@ -19,12 +19,12 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+//    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAll(){
         return new ResponseEntity<>(productService.findAll(),HttpStatus.OK);
     }
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+//    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findById(@PathVariable Long id){
         return new ResponseEntity<>(productService.findById(id),HttpStatus.OK);
