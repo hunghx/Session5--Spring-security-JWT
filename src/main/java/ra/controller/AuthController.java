@@ -54,8 +54,9 @@ public class AuthController {
             authentication= authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),signInRequest.getPassword()));
         }catch (AuthenticationException e){
-            throw  new UserException("Tên đăng nhâpj và mật khẩu không đúng");
+            throw  new UserException("Tên đăng nhâp và mật khẩu không đúng");
         }
+        // lấy ra userprincipal sau khi xác thực
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         // tạo token
